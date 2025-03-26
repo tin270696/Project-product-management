@@ -24,6 +24,18 @@ module.exports.index = async (req, res) => {
     }
     // End Search
 
+    // Sort
+    const sort = {};
+    if(req.query.sortKey &&  req.query.sortValue) {
+        sortKey = req.query.sortKey;
+        sortValue = req.query.sortValue;
+        sort[sortKey] = sortValue;
+    }
+    else {
+        sort.position = "desc";
+    }
+    // End Sort
+
     // Pagination
     const countRecord = await Product.countDocuments(find);
     const objectPagination = paginationHelper(req, countRecord);
@@ -33,7 +45,7 @@ module.exports.index = async (req, res) => {
         .find(find)
         .limit(objectPagination.limitItems)
         .skip(objectPagination.skip)
-        .sort({ position: "desc" });
+        .sort(sort);
 
     res.render("admin/pages/products/index", {
         pageTitle: "Danh sách sản phẩm",

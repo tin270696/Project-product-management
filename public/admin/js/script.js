@@ -221,3 +221,29 @@ if(listButtonRestore.length > 0) {
     })
 }
 // End Restore Button
+
+// Sort
+const sort = document.querySelector("[sort]");
+if(sort) {
+    let url = new URL(window.location.href);
+    const sortSelect = sort.querySelector("[sort-select]");
+    // Thay đổi sắp xếp
+    sortSelect.addEventListener("change", () => {
+        const [sortKey, sortValue] = sortSelect.value.split("-");
+
+        url.searchParams.set("sortKey", sortKey);
+        url.searchParams.set("sortValue", sortValue);
+
+        window.location.href = url.href;
+    })
+
+    // Thêm selected cho thay đổi đang được chọn
+    const selectedSortKey = url.searchParams.get("sortKey");
+    const selectedSortValue = url.searchParams.get("sortValue");
+    if(selectedSortKey && selectedSortValue) {
+        const stringSort = `${selectedSortKey}-${selectedSortValue}`;
+        const selectedOption = document.querySelector(`option[value='${stringSort}']`);
+        selectedOption.selected = true;
+    }
+}
+// End Sort
