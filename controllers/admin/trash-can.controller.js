@@ -12,7 +12,7 @@ module.exports.index = async (req, res) => {
     });
     const objectPagination = paginationHelper(req, countRecord);
 
-    res.render("admin/pages/trashCan/index", {
+    res.render("admin/pages/trash-can/index", {
         pageTitle: "Trang thùng rác",
         products: products,
         countRecord: countRecord,

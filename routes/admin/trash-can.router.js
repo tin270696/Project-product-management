@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const controller = require("../../controllers/admin/trashCan.controller");
+const controller = require("../../controllers/admin/trash-can.controller");
 
 router.get("/", controller.index);
 
