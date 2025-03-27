@@ -18,4 +18,15 @@ router.post(
     controller.createPost
 )
 
+router.get("/detail/:id", controller.detail);
+
+router.get("/edit/:id", controller.edit);
+
+router.patch(
+    "/edit/:id",
+    upload.single('thumbnail'),
+    uploadCloud.uploadSingle,
+    controller.editPatch
+)
+
 module.exports = router;

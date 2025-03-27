@@ -3,7 +3,7 @@ mixin alert-success(time=5000)
         div(
             class="alert alert-success"
             show-alert 
-            data-time="#{time}"
+            data-time=`${time}`
         )
             | #{messages.success}
             button(class="btn btn-danger btn-sm" close-alert) x
@@ -13,7 +13,7 @@ mixin alert-error(time=5000)
         div(
             class="alert alert-danger"
             show-alert 
-            data-time="${time}"
+            data-time=`${time}`
         )
             | #{messages.error}
             button(class="btn btn-danger btn-sm" close-alert) x

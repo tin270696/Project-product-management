@@ -247,3 +247,20 @@ if(sort) {
     }
 }
 // End Sort
+
+// Selected cho mục cha trong edit
+const optionParentId = document.querySelector("[option-parent-id]");
+if(optionParentId) {
+    const parentId = optionParentId.querySelector("select[name='parent_id']");
+    const selectedOption = parentId.options[parentId.selectedIndex];
+    if(selectedOption.value != "") {
+        Array.from(parentId.options).forEach(option => {
+            if (option.value === selectedOption.value) {
+                option.selected = true;
+            } else {
+                option.selected = false;
+            }
+        });
+    }
+}
+// Selected cho mục cha trong edit

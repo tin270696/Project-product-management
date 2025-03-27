@@ -43,3 +43,52 @@ module.exports.createPost = async (req, res) => {
 
     res.redirect(`/${systemConfig.prefixAdmin}/product-category`);
 }
+
+// [GET] /admin/product-category/detail/:id
+module.exports.detail = async (req, res) => {
+    const id = req.params.id;
+    const record = await ProductCategory.findOne({
+        _id: id,
+        deleted: false
+    })
+
+    res.render("admin/pages/product-category/detail", {
+        pageTitle: "Chi tiết danh mục sản phẩm",
+        record: record
+    })
+}
+
+// [GET] /admin/product-category/edit/:id
+module.exports.edit = async (req, res) => {
+    const id = req.params.id;
+    const record = await ProductCategory.findOne({
+        _id: id,
+        deleted: false
+    })
+
+    const allRecords = await ProductCategory.find({
+        deleted: false
+    })
+
+    const allRecTree = createTreeHelper(allRecords);
+
+    res.render("admin/pages/product-category/edit", {
+        pageTitle: "Chỉnh sửa danh mục sản phẩm",
+        record: record,
+        allRecords: allRecTree
+    })
+}
+
+// [PATCH] /admin/product-category/edit/:id
+module.exports.editPatch = async (req, res) => {
+    const id = req.params.id;
+    req.body.position = parseInt(req.body.position);
+
+    await ProductCategory.updateOne({
+        _id: id,
+        deleted: false
+    }, req.body)
+
+    req.flash("success", "Cập nhật danh mục sản phẩm thành công!");
+    res.redirect(`/${systemConfig.prefixAdmin}/product-category`);
+}
