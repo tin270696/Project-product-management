@@ -60,23 +60,28 @@ module.exports.detail = async (req, res) => {
 
 // [GET] /admin/product-category/edit/:id
 module.exports.edit = async (req, res) => {
-    const id = req.params.id;
-    const record = await ProductCategory.findOne({
-        _id: id,
-        deleted: false
-    })
+    try {
+        const id = req.params.id;
+        const record = await ProductCategory.findOne({
+            _id: id,
+            deleted: false
+        })
 
-    const allRecords = await ProductCategory.find({
-        deleted: false
-    })
+        const allRecords = await ProductCategory.find({
+            deleted: false
+        })
 
-    const allRecTree = createTreeHelper(allRecords);
+        const allRecTree = createTreeHelper(allRecords);
 
-    res.render("admin/pages/product-category/edit", {
-        pageTitle: "Chỉnh sửa danh mục sản phẩm",
-        record: record,
-        allRecords: allRecTree
-    })
+        res.render("admin/pages/product-category/edit", {
+            pageTitle: "Chỉnh sửa danh mục sản phẩm",
+            record: record,
+            allRecords: allRecTree
+        })
+    } catch (error) {
+        res.redirect(`/${systemConfig.prefixAdmin}/product-category`);
+    }
+    
 }
 
 // [PATCH] /admin/product-category/edit/:id
@@ -84,11 +89,16 @@ module.exports.editPatch = async (req, res) => {
     const id = req.params.id;
     req.body.position = parseInt(req.body.position);
 
-    await ProductCategory.updateOne({
-        _id: id,
-        deleted: false
-    }, req.body)
+    try {
+        await ProductCategory.updateOne({
+            _id: id,
+            deleted: false
+        }, req.body);
 
-    req.flash("success", "Cập nhật danh mục sản phẩm thành công!");
+        req.flash("success", "Cập nhật danh mục thành công!");
+    } catch (error) {
+        req.flash("error", `Cập nhật danh mục không thành công!`);
+    }
+    
     res.redirect(`/${systemConfig.prefixAdmin}/product-category`);
 }

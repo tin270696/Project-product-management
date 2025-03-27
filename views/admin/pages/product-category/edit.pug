@@ -6,6 +6,7 @@ block main
     h1(class="mb-4") Chỉnh sửa danh mục sản phẩm 
 
     +alert-success(3000)
+    +alert-error(3000)
 
     form(
         action=`/${prefixAdmin}/product-category/edit/${record.id}?_method=PATCH`
