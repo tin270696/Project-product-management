@@ -1,5 +1,6 @@
 extends ../../layouts/default.pug
 include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
 
 block main 
     h1(class="mb-4") Thêm mới danh mục sản phẩm 
@@ -20,14 +21,18 @@ block main
                 name="title"
                 required
             )
+        
         div(class="form-group")
             label(for="parent_id") Danh mục cha
-            input(
-                type="text"
-                class="form-control"
-                id="parent_id"
+            select(
                 name="parent_id"
+                id="parent_id"
+                class="form-control"
             )
+                option(value="") -- Chọn danh mục cha --
+                if(records)
+                    +select-tree(records)
+        
         div(class="form-group")
             label(for="description") Mô tả
             input(
@@ -38,6 +43,7 @@ block main
                 rows="5"
                 textarea-mce
             )
+        
         div(
             class="form-group"
             upload-image
@@ -56,6 +62,7 @@ block main
                 class="image-preview"
                 upload-image-preview
             )
+        
         div(class="form-group")
             label(for="position") Vị trí
             input(
@@ -66,6 +73,7 @@ block main
                 placeholder="Tự động tăng"
                 min="1"
             )
+        
         div(class="form-group form-check form-check-inline")
             input(
                 type="radio"
