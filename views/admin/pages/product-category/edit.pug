@@ -24,19 +24,16 @@ block main
                 required
             )
         
-        div(class="form-group" option-parent-id)
+        div(class="form-group")
             label(for="parent_id") Danh mục cha
             select(
                 name="parent_id"
                 id="parent_id"
                 class="form-control"
             )
-                if(record.parent_id==="")
-                    option(value="") Hiện không có danh mục cha
-                else
-                    option(value=record.parent_id)
+                option(value="") -- Chọn danh mục cha --
                 if(allRecords)
-                    +select-tree(allRecords)
+                    +select-tree(allRecords, 1, record.parent_id)
         
         div(class="form-group")
             label(for="description") Mô tả
