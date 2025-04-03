@@ -87,6 +87,7 @@ block main
                             th Giá
                             th Vị trí
                             th Trạng thái
+                            th Tạo bởi
                             th Hành động
                     tbody 
                         each item, index in products
@@ -126,6 +127,9 @@ block main
                                             data-status="active"
                                             class="badge badge-danger"
                                         ) Dừng hoạt động
+                                td
+                                    div #{item.createdByFullname}
+                                    div #{moment(item.createdAt).format("DD-MM-YYYY HH:mm")}
                                 td
                                     a(
                                         class="btn btn-info btn-sm"

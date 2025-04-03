@@ -20,7 +20,11 @@ const productSchema = new mongoose.Schema({
     deleted: {
         type: Boolean,
         default: false
-    }
+    },
+    deletedAt: Date,
+    deletedBy: String,
+    createdBy: String,
+    updatedBy: String
 }, {
     timestamps: true
 })
