@@ -161,7 +161,7 @@ if(listButtonDelete.length > 0) {
             if(isConfirm) {
                 const id = button.getAttribute("data-id");
                 const path = formDeleteItem.getAttribute("data-path");
-                const action = `${path}/${id}?_method=DELETE`;
+                const action = `${path}/${id}?_method=PATCH`;
 
                 formDeleteItem.action = action;
 

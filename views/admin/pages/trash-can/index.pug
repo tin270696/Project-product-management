@@ -3,66 +3,69 @@ include ../../mixins/pagination.pug
 include ../../mixins/alert.pug
 
 block main 
-    +alert-success()
+    if(role.permissions.includes("trash-can_view"))
+        +alert-success()
 
-    - if (countRecord == 0)
-        h1(class="mb-4") Hiện tại không có sản phẩm đã xóa!
-        
-    - else 
+        - if (countRecord == 0)
+            h1(class="mb-4") Hiện tại không có sản phẩm đã xóa!
+            
+        - else 
 
-        h1(class="mb-4") Các sản phẩm đã xóa
+            h1(class="mb-4") Các sản phẩm đã xóa
 
-        .card.mb-3
-            .card-header Danh sách đã xóa
-            .card-body 
-                table(class="table table-warning table-striped table-hover table-sm")
-                    thead 
-                        tr 
-                            th STT 
-                            th Hình ảnh
-                            th Tiêu đề
-                            th Giá
-                            th Trạng thái 
-                            th Hành động
-                    tbody 
-                        each item, index in products 
+            .card.mb-3
+                .card-header Danh sách đã xóa
+                .card-body 
+                    table(class="table table-warning table-striped table-hover table-sm")
+                        thead 
                             tr 
-                                td 1
-                                td
-                                    img(
-                                        src=item.thumbnail 
-                                        alt=item.title 
-                                        width="100px"
-                                        height="auto"
-                                    )
-                                td #{item.title}
-                                td #{item.title}
-                                td 
-                                    if(item.status == "active")
+                                th STT 
+                                th Hình ảnh
+                                th Tiêu đề
+                                th Giá
+                                th Trạng thái 
+                                th Hành động
+                        tbody 
+                            each item, index in products 
+                                tr 
+                                    td 1
+                                    td
+                                        img(
+                                            src=item.thumbnail 
+                                            alt=item.title 
+                                            width="100px"
+                                            height="auto"
+                                        )
+                                    td #{item.title}
+                                    td #{item.title}
+                                    td 
+                                        if(item.status == "active")
+                                            button(
+                                                button-change-status 
+                                                data-id=item.id 
+                                                data-status="inactive" 
+                                                class="badge badge-success"
+                                            ) Hoạt động
+                                        else 
+                                            button(
+                                                button-change-status 
+                                                data-id=item.id 
+                                                data-status="active"
+                                                class="badge badge-danger"
+                                            ) Dừng hoạt động
+                                    td
                                         button(
-                                            button-change-status 
-                                            data-id=item.id 
-                                            data-status="inactive" 
-                                            class="badge badge-success"
-                                        ) Hoạt động
-                                    else 
-                                        button(
-                                            button-change-status 
-                                            data-id=item.id 
-                                            data-status="active"
-                                            class="badge badge-danger"
-                                        ) Dừng hoạt động
-                                td
-                                    button(
-                                        class="btn btn-success btn-sm"
-                                        button-restore 
-                                        data-id=item.id
-                                    ) Khôi phục
-    +pagination(objectPagination)
+                                            class="btn btn-success btn-sm"
+                                            button-restore 
+                                            data-id=item.id
+                                        ) Khôi phục
+        +pagination(objectPagination)
 
-    form(
-        form-restore 
-        method="POST"
-        action=""
-        data-path="/admin/trash-can/restore"
-    )
+        form(
+            form-restore 
+            method="POST"
+            action=""
+            data-path="/admin/trash-can/restore"
+        )
+    else 
+        h1(class="mb-4") Không có quyền truy cập

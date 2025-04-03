@@ -1,5 +1,6 @@
 const Product = require("../../models/product.model");
 const paginationHelper = require("../../helpers/pagination.helper");
+const systemConfig = require("../../config/system");
 
 // [GET] /admin/trash-can
 module.exports.index = async (req, res) => {
@@ -22,6 +23,11 @@ module.exports.index = async (req, res) => {
 
 // [PATCH] /admin/trash-can/restore/:id
 module.exports.restore = async (req, res)=> {
+    if(!res.locals.role.permissions.includes("trash-can_restore")) {
+        req.flash("error", "Không có quyền thao tác!");
+        res.redirect(`/${systemConfig.prefixAdmin}/trash-can`);
+        return;
+    }
     const id = req.params.id;
 
     await Product.updateOne({
@@ -33,5 +39,5 @@ module.exports.restore = async (req, res)=> {
         _id: id
     })
     req.flash('success', `Khôi phục sản phẩm ${info.title} thành công!`);
-    res.redirect("back");
+    res.redirect(`/${systemConfig.prefixAdmin}/trash-can`);
 }

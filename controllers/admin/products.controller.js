@@ -60,6 +60,11 @@ module.exports.index = async (req, res) => {
 
 // [PATCH] /admin/products/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
+    if(!res.locals.role.permissions.includes("products_edit")) {
+        req.flash("error", "Không có quyền thao tác!");
+        res.redirect(`/${systemConfig.prefixAdmin}/products`);
+        return;
+    }
     try {
         const status = req.params.status;
         const id = req.params.id;
@@ -73,15 +78,20 @@ module.exports.changeStatus = async (req, res) => {
             _id: id
         })
         req.flash('success', `Cập nhật trạng thái ${info.title} thành công!`);
-        res.redirect('back');
+        res.redirect(`/${systemConfig.prefixAdmin}/products`);
     } catch (error) {
         req.flash('error', `Cập nhật trạng thái không thành công!`);
-        res.redirect('back');
+        res.redirect(`/${systemConfig.prefixAdmin}/products`);
     }
 }
 
 // [PATCH] /admin/products/change-multi
 module.exports.changeMulti = async (req, res) => {
+    if(!res.locals.role.permissions.includes("products_edit")) {
+        req.flash("error", "Không có quyền thao tác!");
+        res.redirect(`/${systemConfig.prefixAdmin}/products`);
+        return;
+    }
     try {
         const type = req.body.type;
         let ids = req.body.ids;
@@ -110,6 +120,11 @@ module.exports.changeMulti = async (req, res) => {
                 req.flash('success', "Cập nhật vị trí bản ghi thành công!");
                 break;
             case "delete-all":
+                if(!res.locals.role.permissions.includes("products_delete")) {
+                    req.flash("error", "Không có quyền thao tác!");
+                    res.redirect(`/${systemConfig.prefixAdmin}/products`);
+                    return;
+                }
                 await Product.updateMany({
                     _id: { $in: ids }
                 }, {
@@ -122,15 +137,20 @@ module.exports.changeMulti = async (req, res) => {
         }
 
         req.flash('success', "Cập nhật trạng thái thành công!");
-        res.redirect('back');
+        res.redirect(`/${systemConfig.prefixAdmin}/products`);
     } catch (error) {
         req.flash('error', "Cập nhật trạng thái không thành công!");
-        res.redirect('back');
+        res.redirect(`/${systemConfig.prefixAdmin}/products`);
     }
 }
 
 // [DELETE] /admin/products/delete/:id
 module.exports.deleteItem = async (req, res) => {
+    if(!res.locals.role.permissions.includes("products_delete")) {
+        req.flash("error", "Không có quyền thao tác!");
+        res.redirect(`/${systemConfig.prefixAdmin}/products`);
+        return;
+    }
     try {
         id = req.params.id;
         await Product.updateOne({
@@ -139,10 +159,10 @@ module.exports.deleteItem = async (req, res) => {
             deleted: true
         });
         req.flash('success', "Đã xóa sản phẩm thành công!");
-        res.redirect('back');
+        res.redirect(`/${systemConfig.prefixAdmin}/products`);
     } catch (error) {
         req.flash('error', "Xóa sản phẩm không thành công!");
-        res.redirect('back');
+        res.redirect(`/${systemConfig.prefixAdmin}/products`);
     }
 }
 
@@ -161,7 +181,11 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/products/create
 module.exports.createPost = async (req, res) => {
-
+    if(!res.locals.role.permissions.includes("products_create")) {
+        req.flash("error", "Không có quyền thao tác!");
+        res.redirect(`/${systemConfig.prefixAdmin}/products`);
+        return;
+    }
     req.body.price = parseInt(req.body.price);
     req.body.discountPercentage = parseInt(req.body.discountPercentage);
     req.body.stock = parseInt(req.body.stock);
@@ -204,12 +228,17 @@ module.exports.edit = async (req, res) => {
             category: newCategory
         })
     } catch (error) {
-        res.redirect("back");
+        res.redirect(`/${systemConfig.prefixAdmin}/products`);
     }
 }
 
 // [PATCH] /admin/products/edit/:id
 module.exports.editPatch = async (req, res) => {
+    if(!res.locals.role.permissions.includes("products_edit")) {
+        req.flash("error", "Không có quyền thao tác!");
+        res.redirect(`/${systemConfig.prefixAdmin}/products`);
+        return;
+    }
     try {
         const id = req.params.id;
 
@@ -246,6 +275,6 @@ module.exports.detail = async (req, res) => {
             product: product
         })
     } catch (error) {
-        res.redirect("back");
+        res.redirect(`/${systemConfig.prefixAdmin}/products`);
     }
 }

@@ -3,8 +3,6 @@ const multer = require("multer");
 const router = express.Router();
 const validate = require("../../validates/admin/product.validate");
 
-// const storage = require("../../helpers/storageMulter.helper");
-// const upload = multer({ storage: storage });
 const uploadCloud = require("../../middlewares/admin/uploadCloud.middleware");
 const upload = multer();
 
@@ -16,7 +14,7 @@ router.patch("/change-status/:status/:id", controller.changeStatus);
 
 router.patch("/change-multi", controller.changeMulti);
 
-router.delete("/delete/:id", controller.deleteItem);
+router.patch("/delete/:id", controller.deleteItem);
 
 router.get("/create", controller.create);
 

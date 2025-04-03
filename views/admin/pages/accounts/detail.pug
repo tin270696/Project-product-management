@@ -1,28 +1,31 @@
 extends ../../layouts/default.pug
 
 block main 
-    h1(class="mb-4") Thông tin người dùng 
+    if(role.permissions.includes("accounts_view"))
+        h1(class="mb-4") Thông tin người dùng 
 
-    if(account.fullName) 
-        h1(clss="mb-4") #{account.fullName}
-    
-    if(account.avatar)
-        div(class="mb-4")
-            img(
-                src=account.avatar
-                style="width: 250px"
-            )
+        if(account.fullName) 
+            h1(clss="mb-4") #{account.fullName}
+        
+        if(account.avatar)
+            div(class="mb-4")
+                img(
+                    src=account.avatar
+                    style="width: 250px"
+                )
 
-    if(account.email)
-        div(clss="mb-4") Email: #{account.email}
+        if(account.email)
+            div(clss="mb-4") Email: #{account.email}
 
-    if(account.roleTitle)
-        div(clss="mb-4") Phân quyền: #{account.roleTitle}
+        if(account.roleTitle)
+            div(clss="mb-4") Phân quyền: #{account.roleTitle}
 
-    if(account.status)
-        div(class="mb-4")
-            span Trạng thái:
-            if (account.status === "active")
-                span(class="badge badge-success") Hoạt động
-            else
-                span(class="badge badge-danger") Dừng hoạt động
+        if(account.status)
+            div(class="mb-4")
+                span Trạng thái:
+                if (account.status === "active")
+                    span(class="badge badge-success") Hoạt động
+                else
+                    span(class="badge badge-danger") Dừng hoạt động
+    else 
+        h1(class="mb-4") Không có quyền truy cập

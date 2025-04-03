@@ -28,6 +28,50 @@ module.exports.index = async (req, res) => {
     })
 }
 
+// [PATCH] /admin/accounts/change-status/:status/:id
+module.exports.changeStatus = async (req, res) => {
+    if(!res.locals.role.permissions.includes("accounts_edit")) {
+        req.flash("error", "Không có quyền thao tác!");
+        res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+        return;
+    }
+    try {
+        const status = req.params.status;
+        const id = req.params.id;
+        await Account.updateOne({
+            _id: id,
+            deleted: false
+        }, {
+            status: status
+        });
+        req.flash("success", "Thay đổi trạng thái thành công!");
+        res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+    } catch (error) {
+        res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+    }
+}
+
+// [PATCH] /admin/accounts/delete/:id
+module.exports.delete = async (req, res) => {
+    if(!res.locals.role.permissions.includes("accounts_delete")) {
+        req.flash("error", "Không có quyền thao tác!");
+        res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+        return;
+    }
+    try {
+        const id = req.params.id;
+        await Account.updateOne({
+            _id: id
+        }, {
+            deleted: true
+        });
+        req.flash("success", "Xóa tài khoản thành công!");
+        res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+    } catch (error) {
+        res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+    }
+}
+
 // [GET] /admin/accounts/create
 module.exports.create = async (req, res) => {
     const roles = await Role.find({
@@ -42,6 +86,11 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/accounts/create
 module.exports.createPost = async (req, res) => {
+    if(!res.locals.role.permissions.includes("accounts_create")) {
+        req.flash("error", "Không có quyền thao tác!");
+        res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+        return;
+    }
     req.body.password = md5(req.body.password);
     req.body.token = generateHelper.generateRandomString(30);
 
@@ -103,6 +152,11 @@ module.exports.edit = async (req, res) => {
 
 // [PATCH] /admin/accounts/edit/:id
 module.exports.editPatch = async (req, res) => {
+    if(!res.locals.role.permissions.includes("accounts_edit")) {
+        req.flash("error", "Không có quyền thao tác!");
+        res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+        return;
+    }
     try {
         if(req.body.password) {
             req.body.password = md5(req.body.password);

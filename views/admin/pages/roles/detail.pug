@@ -1,0 +1,11 @@
+extends ../../layouts/default.pug
+
+block main 
+    if(role.permissions.includes("roles_view"))
+        h1(class="mb-4") Chi tiết nhóm quyền 
+        if(record.title)
+            h1(class="mb-4") #{record.title}
+        if(record.description)
+            div Mô tả chức năng: #{record.description}
+    else 
+        h1(class="mb-4") Không có quyền truy cập
