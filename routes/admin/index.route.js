@@ -1,11 +1,12 @@
 const systemConfig = require("../../config/system");
 const dashboardRoutes = require("./dashboard.route");
 const productRoutes = require("./products.route");
-const trashCanRoutes = require("./trash-can.router");
+const trashCanRoutes = require("./trash-can.route");
 const productCategoryRoutes = require("./product-category.route");
 const roleRoutes = require("./roles.route");
 const accountRoutes = require("./accounts.route");
 const authRoutes = require("./auth.route");
+const myAccountRoutes = require("./my-account.route");
 const authMiddlewares = require("../../middlewares/admin/auth.middleware");
 
 module.exports = (app) => {
@@ -48,4 +49,10 @@ module.exports = (app) => {
     );
 
     app.use(PATH_ADMIN + "/auth", authRoutes);
+
+    app.use(
+        PATH_ADMIN + "/my-account",
+        authMiddlewares.requireAuth,
+        myAccountRoutes
+    )
 }
