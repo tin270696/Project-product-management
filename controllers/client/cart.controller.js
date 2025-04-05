@@ -1,4 +1,5 @@
 const Cart = require("../../models/cart.model");
+const Product = require("../../models/product.model");
 
 // [POST] /cart/add/:productId
 module.exports.addPost = async (req, res) => {
@@ -11,7 +12,7 @@ module.exports.addPost = async (req, res) => {
             _id: cartId
         })
 
-        const existProductInCart = cart.products.find(item => item.product_id = productId);
+        const existProductInCart = cart.products.find(item => item.product_id == productId);
 
         if(existProductInCart) {
             const updatedQuantity = existProductInCart.quantity + quantity;
@@ -22,7 +23,8 @@ module.exports.addPost = async (req, res) => {
             }, {
                 $set: {"products.$.quantity": updatedQuantity}
             });
-        } else {
+        }
+        else {
             const objectCart = {
                 product_id: productId,
                 quantity: quantity
@@ -41,4 +43,32 @@ module.exports.addPost = async (req, res) => {
     }
 
     res.redirect("back");
+}
+
+// [GET] /cart/
+module.exports.index = async (req, res) => {
+    const cart = await Cart.findOne({
+        _id: req.cookies.cartId
+    })
+
+    cart.totalPrice = 0;
+
+    for(const item of cart.products) {
+        const infoProduct = await Product.findOne({
+            _id: item.product_id
+        }).select("thumbnail slug title price discountPercentage stock");
+
+        infoProduct.newPrice = (infoProduct.price * (100 - infoProduct.discountPercentage)/100).toFixed(0);
+
+        infoProduct.totalPrice = infoProduct.newPrice * item.quantity;
+
+        cart.totalPrice += infoProduct.totalPrice;
+
+        item.infoProduct = infoProduct;
+    }
+
+    res.render("client/pages/cart/index", {
+        pageTitle: "Giỏ hàng",
+        cartDetail: cart
+    })
 }
