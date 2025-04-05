@@ -72,3 +72,44 @@ module.exports.index = async (req, res) => {
         cartDetail: cart
     })
 }
+
+// [PATCH] /cart/delete/:productId
+module.exports.delete = async (req, res) => {
+    const cartId = req.cookies.cartId;
+    const productId = req.params.productId;
+    try {
+        await Cart.updateOne({
+            _id: cartId
+        }, {
+            $pull: {products: {product_id: productId}}
+        })
+    
+        const product = await Product.findOne({
+            _id: productId
+        }).select("title");
+    
+        req.flash("success", `Đã xóa ${product.title} khỏi giỏ hàng!`);
+        res.redirect("back");
+    } catch (error) {
+        res.redirect("back");
+    }
+}
+
+// [GET] /cart/update/:productId/:quantity
+module.exports.updateItem = async (req, res) => {
+    try {
+        const productId = req.params.productId;
+        const quantity = req.params.quantity;
+        await Cart.updateOne({
+            _id: req.cookies.cartId,
+            "products.product_id": productId
+        }, {
+            $set: {"products.$.quantity": quantity}
+        })
+
+        req.flash("success", "Cập nhật sản phẩm thành công!");
+        res.redirect("back");
+    } catch (error) {
+        res.redirect("back");
+    }
+}
